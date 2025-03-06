@@ -28,8 +28,8 @@ android {
         }
         debug {
 
-            buildConfigField("String", "API_KEY", "008fbf4e-ceaf-4449-948b-72c08f82f248")
-            buildConfigField("String", "BASE_URL", "https://rest.coinapi.io/v1")
+            buildConfigField("String", "API_KEY", "\"008fbf4e-ceaf-4449-948b-72c08f82f248\"")
+            buildConfigField("String", "BASE_URL", "\"https://rest.coinapi.io/v1/\"")
 
         }
     }
