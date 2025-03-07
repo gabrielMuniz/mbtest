@@ -27,7 +27,6 @@ android {
             )
         }
         debug {
-
             buildConfigField("String", "API_KEY", "\"008fbf4e-ceaf-4449-948b-72c08f82f248\"")
             buildConfigField("String", "BASE_URL", "\"https://rest.coinapi.io/v1/\"")
 
@@ -60,13 +59,12 @@ dependencies {
     implementation(libs.gson)
 
     //Koin dependencies
-    implementation(libs.koin.core)
     implementation(libs.koin.android)
-    implementation(libs.koin.androidx.navigation)
-    implementation(libs.koin.androidx.workmanager)
     implementation(libs.koin.androidx.compose)
 
     testImplementation(libs.junit)
+    testImplementation(libs.koin.test.junit4)
+
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
