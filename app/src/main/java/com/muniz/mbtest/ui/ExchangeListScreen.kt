@@ -1,14 +1,15 @@
 package com.muniz.mbtest.ui
 
-
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -22,12 +23,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.muniz.mbtest.domain.Exchange
 import com.muniz.mbtest.ui.theme.MercadoBitCoinAndroidTheme
 import org.koin.androidx.compose.koinViewModel
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun ExchangeListScreen() {
 
@@ -49,7 +48,11 @@ fun ExchangeListScreen() {
             }
 
             else -> {
-                ExchangeList(exchanges = state.exchanges)
+                ExchangeList(
+                    state = state,
+                    loadMoreExchanges = { viewModel.loadMoreExchanges() },
+                    paddingValues = innerPadding
+                )
             }
         }
     }
@@ -74,14 +77,38 @@ fun ErrorMessage(error: String?) {
 }
 
 @Composable
-fun ExchangeList(exchanges: List<Exchange>) {
-    LazyColumn(
+fun ExchangeList(
+    state: ExchangeListState,
+    paddingValues: PaddingValues,
+    loadMoreExchanges: () -> Unit
+) {
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(paddingValues = paddingValues)
+            .consumeWindowInsets(paddingValues = paddingValues)
     ) {
-        items(exchanges) { exchange ->
-            ExchangeItem(exchange)
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 8.dp)
+        ) {
+            items(state.visibleExchanges) { exchange ->
+                ExchangeItem(exchange)
+            }
+
+            item {
+                if (state.isLoadingMore) {
+                    CircularProgressIndicator(modifier = Modifier.fillMaxWidth())
+                } else if (state.visibleExchanges.size < state.allExchanges.size) {
+                    Button(
+                        onClick = { loadMoreExchanges() },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text("Carregar mais")
+                    }
+                }
+            }
         }
     }
 }

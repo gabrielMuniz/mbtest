@@ -1,6 +1,5 @@
 package com.muniz.mbtest.ui
 
-import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.muniz.mbtest.domain.Exchange
@@ -21,7 +20,10 @@ class ExchangeListViewModel(
             _state.value = ExchangeListState(isLoading = true)
             try {
                 repository.getExchanges().collect { exchanges ->
-                    _state.value = ExchangeListState(exchanges = exchanges)
+                    _state.value = ExchangeListState(
+                        allExchanges = exchanges,
+                        visibleExchanges = exchanges.take(_state.value.pageSize)
+                    )
                 }
             } catch (e: Exception) {
                 _state.value = ExchangeListState(error = e.message)
@@ -29,11 +31,39 @@ class ExchangeListViewModel(
         }
     }
 
-}
+    fun loadMoreExchanges() {
+        if (_state.value.isLoadingMore) return
 
+        viewModelScope.launch {
+            _state.value = _state.value.copy(isLoadingMore = true)
+
+            val nextPage = _state.value.currentPage + 1
+            val startIndex = (nextPage - 1) * _state.value.pageSize
+            val endIndex = startIndex + _state.value.pageSize
+            val newItems = _state.value.allExchanges.subList(
+                startIndex, endIndex.coerceAtMost(_state.value.allExchanges.size)
+            )
+
+            if (newItems.isNotEmpty()) {
+                _state.value = _state.value.copy(
+                    visibleExchanges = _state.value.visibleExchanges + newItems,
+                    currentPage = nextPage,
+                    isLoadingMore = false
+                )
+            } else {
+                _state.value = _state.value.copy(isLoadingMore = false)
+            }
+        }
+    }
+
+}
 
 data class ExchangeListState(
     val isLoading: Boolean = false,
-    val exchanges: List<Exchange> = emptyList(),
-    val error: String? = null
+    val isLoadingMore: Boolean = false,
+    val allExchanges: List<Exchange> = emptyList(),
+    val visibleExchanges: List<Exchange> = emptyList(),
+    val error: String? = null,
+    val currentPage: Int = 1,
+    val pageSize: Int = 20
 )

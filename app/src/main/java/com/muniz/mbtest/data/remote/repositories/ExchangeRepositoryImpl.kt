@@ -15,7 +15,10 @@ class ExchangeRepositoryImpl(private val exchangeApi: ExchangeApi) : ExchangeRep
             emit(
                 exchangeApi.getExchanges()
                     .awaitResponse()
-                    .map { response -> response.toExchange() })
+                    .filter { exchange -> !exchange.name.isNullOrEmpty() }
+                    .map { response ->
+                        response.toExchange()
+                    })
         } catch (ex: Exception) {
             throw Exception("Erro ao buscar dados da API: ${ex.message}")
         }
