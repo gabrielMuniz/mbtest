@@ -155,19 +155,19 @@ fun ExchangeDetailScreen(
                                 label = stringResource(
                                     id = R.string.exchange_detail_volume_1hrs_usd_label
                                 ),
-                                value = volumeOneHrsUsd?.formatDecimalPlaces().toString()
+                                value = volumeOneHrsUsd?.formatDecimalPlaces()
                             )
                             DetailItem(
                                 label = stringResource(
                                     id = R.string.exchange_detail_volume_1day_usd_label
                                 ),
-                                value = volumeOneDayUsd.formatDecimalPlaces().toString()
+                                value = volumeOneDayUsd.formatDecimalPlaces()
                             )
                             DetailItem(
                                 label = stringResource(
                                     id = R.string.exchange_detail_volume_1mth_usd_label
                                 ),
-                                value = volumeOneMthUsd?.formatDecimalPlaces().toString()
+                                value = volumeOneMthUsd?.formatDecimalPlaces()
                             )
                             DetailItem(
                                 label = stringResource(

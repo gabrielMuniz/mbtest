@@ -11,7 +11,7 @@
     <string name="load_more_button">Carregar mais</string>
     <string name="name_label">Nome</string>
     <string name="exchange_id_label">ID da Exchange</string>
-    <string name="volume_one_day_usd_label">Volume (1 dia em USD)</string>
+    <string name="volume_one_day_usd_label">Volume (1 dia)</string>
 
     <!-- Detail Labels -->
     <string name="exchange_detail_name_label">Nome</string>
@@ -25,9 +25,9 @@
     <string name="exchange_detail_data_trade_end_label">Fim das Trades</string>
     <string name="exchange_detail_data_trade_count_label">Quantidade de Trades</string>
     <string name="exchange_detail_data_symbols_count_label">Quantidade de Símbolos</string>
-    <string name="exchange_detail_volume_1hrs_usd_label">Volume (1h em USD)</string>
-    <string name="exchange_detail_volume_1day_usd_label">Volume (1 dia em USD)</string>
-    <string name="exchange_detail_volume_1mth_usd_label">Volume (1 mês em USD)</string>
+    <string name="exchange_detail_volume_1hrs_usd_label">Volume (1h)</string>
+    <string name="exchange_detail_volume_1day_usd_label">Volume (1 dia)</string>
+    <string name="exchange_detail_volume_1mth_usd_label">Volume (1 mês)</string>
     <string name="exchange_detail_metrics_label">Métricas</string>
 
     <!-- Error message and loading state -->

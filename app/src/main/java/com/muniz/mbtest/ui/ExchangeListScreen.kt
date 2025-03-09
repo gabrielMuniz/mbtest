@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.muniz.mbtest.R
 import com.muniz.mbtest.domain.model.Exchange
+import com.muniz.mbtest.ui.extensions.formatDecimalPlaces
 import com.muniz.mbtest.ui.theme.MercadoBitCoinAndroidTheme
 import org.koin.androidx.compose.koinViewModel
 
@@ -148,7 +149,9 @@ fun ExchangeItem(exchange: Exchange, onExchangeClicked: (String) -> Unit) {
                 style = MaterialTheme.typography.bodyMedium
             )
             Text(
-                text = "${stringResource(id = R.string.volume_one_day_usd_label)}: ${exchange.volumeOneDayUsd}",
+                text = "${
+                    stringResource(id = R.string.volume_one_day_usd_label)
+                }: ${exchange.volumeOneDayUsd.formatDecimalPlaces()}",
                 style = MaterialTheme.typography.bodyMedium
             )
         }
