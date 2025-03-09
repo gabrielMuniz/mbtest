@@ -28,17 +28,31 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.muniz.mbtest.R
 import com.muniz.mbtest.domain.model.Exchange
 import com.muniz.mbtest.ui.extensions.formatDecimalPlaces
 import com.muniz.mbtest.ui.theme.MercadoBitCoinAndroidTheme
 import org.koin.androidx.compose.koinViewModel
 
+/*
+    Suppress deprecation because the official
+    implementation of pull to refresh have issues
+ */
+@Suppress("DEPRECATION")
 @Composable
 fun ExchangeListScreen(onExchangeListClicked: (String) -> Unit) {
     val viewModel: ExchangeListViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
     val isLoaded = rememberSaveable { mutableStateOf(false) }
+    val isRefreshing = rememberSaveable { mutableStateOf(false) }
+
+    fun refreshData() {
+        isRefreshing.value = true
+        viewModel.getExchanges()
+        isRefreshing.value = false
+    }
 
     LaunchedEffect(Unit) {
         if (!isLoaded.value) {
@@ -48,22 +62,27 @@ fun ExchangeListScreen(onExchangeListClicked: (String) -> Unit) {
     }
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-        when {
-            state.isLoading -> {
-                LoadingIndicator()
-            }
+        SwipeRefresh(
+            state = rememberSwipeRefreshState(isRefreshing.value),
+            onRefresh = { refreshData() }
+        ) {
+            when {
+                state.isLoading -> {
+                    LoadingIndicator()
+                }
 
-            state.error != null -> {
-                ErrorMessage(state.error)
-            }
+                state.error != null -> {
+                    ErrorMessage(state.error)
+                }
 
-            else -> {
-                ExchangeList(
-                    state = state,
-                    loadMoreExchanges = { viewModel.loadMoreExchanges() },
-                    onExchangeClicked = { onExchangeListClicked(it) },
-                    paddingValues = innerPadding
-                )
+                else -> {
+                    ExchangeList(
+                        state = state,
+                        loadMoreExchanges = { viewModel.loadMoreExchanges() },
+                        onExchangeClicked = { onExchangeListClicked(it) },
+                        paddingValues = innerPadding
+                    )
+                }
             }
         }
     }

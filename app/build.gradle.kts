@@ -58,6 +58,7 @@ dependencies {
     implementation(libs.retrofit.gson)
     implementation(libs.gson)
     implementation(libs.androidx.compose.navigation)
+    implementation(libs.accompanist.swiperefresh)
 
     //Koin dependencies
     implementation(libs.koin.android)

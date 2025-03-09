@@ -1,5 +1,10 @@
 package com.muniz.mbtest.ui.extensions
 
-fun Double.formatDecimalPlaces(places: Int = 5): String {
-    return "%.${places}f".format(this)
+import java.math.RoundingMode
+import java.text.DecimalFormat
+
+fun Double.formatDecimalPlaces(): String {
+    val df = DecimalFormat("#.##")
+    df.roundingMode = RoundingMode.FLOOR
+    return df.format(this).toDouble().toString()
 }
