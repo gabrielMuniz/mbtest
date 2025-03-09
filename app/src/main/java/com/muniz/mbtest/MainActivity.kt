@@ -11,6 +11,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
+import com.muniz.mbtest.navigation.MercadoBitCoinNavigationGraph
 import com.muniz.mbtest.ui.ExchangeListScreen
 import com.muniz.mbtest.ui.theme.MercadoBitCoinAndroidTheme
 import org.koin.compose.KoinContext
@@ -20,9 +22,11 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            val navController = rememberNavController()
+
             MercadoBitCoinAndroidTheme {
                 KoinContext {
-                    ExchangeListScreen()
+                    MercadoBitCoinNavigationGraph(navController)
                 }
             }
         }

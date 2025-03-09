@@ -2,7 +2,7 @@ package com.muniz.mbtest.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.muniz.mbtest.domain.Exchange
+import com.muniz.mbtest.domain.model.Exchange
 import com.muniz.mbtest.domain.repositories.ExchangeRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

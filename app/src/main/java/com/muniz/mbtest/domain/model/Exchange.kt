@@ -1,4 +1,4 @@
-package com.muniz.mbtest.domain
+package com.muniz.mbtest.domain.model
 
 data class Exchange(
     val name: String,

@@ -1,5 +1,6 @@
 package com.muniz.mbtest.ui
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -18,26 +19,34 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.muniz.mbtest.domain.Exchange
+import com.muniz.mbtest.R
+import com.muniz.mbtest.domain.model.Exchange
 import com.muniz.mbtest.ui.theme.MercadoBitCoinAndroidTheme
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun ExchangeListScreen() {
-
+fun ExchangeListScreen(onExchangeListClicked: (String) -> Unit) {
     val viewModel: ExchangeListViewModel = koinViewModel()
-    val state = viewModel.state.collectAsStateWithLifecycle().value
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    val isLoaded = rememberSaveable { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        if (!isLoaded.value) {
+            viewModel.getExchanges()
+            isLoaded.value = true
+        }
+    }
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-        LaunchedEffect(Unit) {
-            viewModel.getExchanges()
-        }
-
         when {
             state.isLoading -> {
                 LoadingIndicator()
@@ -51,6 +60,7 @@ fun ExchangeListScreen() {
                 ExchangeList(
                     state = state,
                     loadMoreExchanges = { viewModel.loadMoreExchanges() },
+                    onExchangeClicked = { onExchangeListClicked(it) },
                     paddingValues = innerPadding
                 )
             }
@@ -72,13 +82,17 @@ fun ErrorMessage(error: String?) {
     Box(
         contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()
     ) {
-        Text(text = "Erro: $error")
+        Text(
+            text = stringResource(id = R.string.error_message, error.orEmpty()),
+            style = MaterialTheme.typography.bodyMedium
+        )
     }
 }
 
 @Composable
 fun ExchangeList(
     state: ExchangeListState,
+    onExchangeClicked: (String) -> Unit,
     paddingValues: PaddingValues,
     loadMoreExchanges: () -> Unit
 ) {
@@ -94,7 +108,7 @@ fun ExchangeList(
                 .padding(horizontal = 8.dp)
         ) {
             items(state.visibleExchanges) { exchange ->
-                ExchangeItem(exchange)
+                ExchangeItem(exchange, onExchangeClicked = { onExchangeClicked(it) })
             }
 
             item {
@@ -105,7 +119,7 @@ fun ExchangeList(
                         onClick = { loadMoreExchanges() },
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text("Carregar mais")
+                        Text(stringResource(id = R.string.load_more_button))
                     }
                 }
             }
@@ -114,26 +128,28 @@ fun ExchangeList(
 }
 
 @Composable
-fun ExchangeItem(exchange: Exchange) {
+fun ExchangeItem(exchange: Exchange, onExchangeClicked: (String) -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
+            .padding(vertical = 8.dp)
+            .clickable { onExchangeClicked(exchange.exchangeId) },
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
             Text(
-                text = "Nome: ${exchange.name}", style = MaterialTheme.typography.headlineMedium
+                text = "${stringResource(id = R.string.name_label)}: ${exchange.name}",
+                style = MaterialTheme.typography.titleLarge
             )
             Text(
-                text = "Taxa de Câmbio: ${exchange.exchangeId}",
-                style = MaterialTheme.typography.headlineSmall
+                text = "${stringResource(id = R.string.exchange_id_label)}: ${exchange.exchangeId}",
+                style = MaterialTheme.typography.bodyMedium
             )
             Text(
-                text = "Taxa de Câmbio: ${exchange.volumeOneDayUsd}",
-                style = MaterialTheme.typography.headlineSmall
+                text = "${stringResource(id = R.string.volume_one_day_usd_label)}: ${exchange.volumeOneDayUsd}",
+                style = MaterialTheme.typography.bodyMedium
             )
         }
     }
@@ -143,6 +159,6 @@ fun ExchangeItem(exchange: Exchange) {
 @Preview(showBackground = true)
 fun ExchangeListScreenPreview() {
     MercadoBitCoinAndroidTheme {
-        ExchangeListScreen()
+        ExchangeListScreen(onExchangeListClicked = { })
     }
 }
