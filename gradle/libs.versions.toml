@@ -13,6 +13,8 @@ gsonVersion = "2.10.1"
 koinVersion = "3.5.0"
 navigationVersion = "2.8.8"
 swipeRefreshVersion = "0.36.0"
+mockkVersion = "1.13.17"
+kotlinCoroutinesTestVersion = "1.8.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -34,6 +36,9 @@ retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = 
 accompanist-swiperefresh = { module = "com.google.accompanist:accompanist-swiperefresh", version.ref = "swipeRefreshVersion" }
 retrofit-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofitVersion" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gsonVersion" }
+
+mockk = { module = "io.mockk:mockk", version.ref = "mockkVersion" }
+kotlinCoroutinesTest = {module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinCoroutinesTestVersion"}
 
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koinVersion" }
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koinVersion" }

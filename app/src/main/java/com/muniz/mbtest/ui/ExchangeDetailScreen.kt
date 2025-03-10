@@ -48,7 +48,7 @@ fun ExchangeDetailScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "Exchange Details") },
+                title = { Text(text = stringResource(R.string.exchange_detail_title)) },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(

@@ -66,6 +66,8 @@ dependencies {
 
     testImplementation(libs.junit)
     testImplementation(libs.koin.test.junit4)
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlinCoroutinesTest)
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
